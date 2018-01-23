@@ -30,4 +30,15 @@ public class Messung {
 //    DateTimeFormatter formatter = DateTimeFormatter.ofPattern();
     this.zeitStempel=LocalDateTime.parse(zeitStempel,DateTimeFormatter.ISO_LOCAL_DATE_TIME);
   }
+  
+  public String getWertString() {
+    String stringwert=Double.toString(wert);
+    stringwert.replace('.',',');
+    return stringwert; 
+  }
+  
+  public String getZeitStempel() {
+    String zeitStempel=this.zeitStempel.toString();
+    return zeitStempel;
+  }
 }
