@@ -13,10 +13,13 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMImplementation;
@@ -61,11 +64,17 @@ public class Sensor {
 
   public void ausXMLLesen(String string) {
     try {
+      /**
+       * Erzeugt die Benötigeten Objekte um aus einer XML Datei zu lesen
+       */
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       DocumentBuilder builder = factory.newDocumentBuilder();
       Document document = builder.parse(string + ".xml");
       Element element = document.getDocumentElement();
-
+      
+      /**
+       * Setzt die Objektvariable mit der ID aus der XML und dem dazu gehörigen Wert des Atribites
+       */
       id = element.getAttributeNode("id").toString();
 
       for (int i = 0; i < element.getChildNodes().getLength(); i++) {
@@ -86,45 +95,56 @@ public class Sensor {
     }
 
   }
-
+  
   public void inXMLSchreiben() {
     try {
-      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      DocumentBuilderFactory factory=DocumentBuilderFactory.newInstance();
       DocumentBuilder builder = factory.newDocumentBuilder();
-      Document document = builder.newDocument();
-      Element element = document.getDocumentElement();
-      
-      TransformerFactory transformerFactory=TransformerFactory.newInstance();
-      Transformer transformer=transformerFactory.newTransformer();
-      DOMSource source =new DOMSource(document);
+      Document document=builder.newDocument();
       DOMImplementation domImpl = document.getImplementation();
-      DocumentType docType = domImpl.createDocumentType("Sensor", "", "Sensor.dtd");
-      document.appendChild(docType);
+          DocumentType docType = domImpl.createDocumentType("Sensor", "", "Sensor.dtd");
+          document.appendChild(docType);
+
       
-      Element rootElement = document.createElement("Sensor");
+      Element rootElement=document.createElement("Sensor");
       document.appendChild(rootElement);
       
-      Attr attId=document.createAttribute("id");
-      attId.setValue(id);
-      rootElement.setAttributeNode(attId);
+      Attr attrId=document.createAttribute("id");
+      attrId.setValue(id);
+      rootElement.setAttributeNode(attrId);
       
-      for(int i=0;i<messungsListe.size();i++) {
-        Element messung=document.createElement("Messung");
+      for(int i=0;i<messungsListe.size();i++){
+        Element messung =document.createElement("Messung");
         rootElement.appendChild(messung);
         
-        Attr attWert=document.createAttribute("wert");
-        attWert.setValue(messungsListe.get(i).getWertString());
-        rootElement.setAttributeNode(attWert);
+        Attr attrWert=document.createAttribute("wert");
+        attrWert.setValue(messungsListe.get(i).getWertString());
+        messung.setAttributeNode(attrWert);
         
-        Attr attTime=document.createAttribute("zeitstempel");
-        attTime.setValue(messungsListe.get(i).getZeitStempel());
-        rootElement.setAttributeNode(attTime);
+        Attr attrZeit=document.createAttribute("zeitstempel");
+        attrZeit.setValue(messungsListe.get(i).getZeitStempel());
+        messung.setAttributeNode(attrZeit);
       }
-    } catch (ParserConfigurationException |
-        TransformerConfigurationException e) {
-
+      
+      TransformerFactory transformerFactory = TransformerFactory.newInstance();
+          Transformer transformer;
+          transformer = transformerFactory.newTransformer();
+          transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+          transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+          transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+          transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM,
+              docType.getSystemId());
+          DOMSource source = new DOMSource(document);
+          StreamResult result = new StreamResult(
+              new File("src/aufgabe1/Sensor_Out1.xml"));
+          transformer.transform(source, result);
+      
+    }catch (ParserConfigurationException|TransformerException e) {
+      
     }
-  }
+  
+}
+
 
   public static void main(String[] args) {
     Sensor sensor = new Sensor();
