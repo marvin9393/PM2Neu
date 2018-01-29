@@ -24,14 +24,16 @@ public class AnwendungGenerics {
   }
   
   public static void main(String[] args) {
-    ArrayListe<Integer> arra = new ArrayListe<Integer>();
+    ArrayListe<Object> arra = new ArrayListe<Object>();
     int zahl=5;
     AnwendungGenerics a=new AnwendungGenerics();
-    arra.hinzufuegen(zahl);
+    String zahl2="hallo";
+
+    arra.hinzufuegen(zahl2);
     AnwendungGenerics.istErsteElementZahl(arra);
-    arra.hinzufuegen(4);
+    arra.hinzufuegen(6);
     System.out.println(arra.getKleinstesElement());
-    
+    arra.hinzufuegen(zahl);
   }
 
 }

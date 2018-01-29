@@ -33,57 +33,61 @@ public class ArrayListe<T> {
   }
 
   public T getAnzahlElemente(int index) {
-    return (T)elemente[index];
+    return (T) elemente[index];
   }
-  
+
   public void entfernen(T object) {
-    for (int i=0;i<elemente.length;i++) {
-      if(elemente[i].equals(object)) {
-        elemente[i]=null;
+    for (int i = 0; i < elemente.length; i++) {
+      if (elemente[i].equals(object)) {
+        elemente[i] = null;
         anzahlElemente--;
       }
-      if(elemente[i]==null&i<elemente.length-1) {
-        elemente[i]=elemente[i+1];
-        elemente[i+1]=null;
+      if (elemente[i] == null & i < elemente.length - 1) {
+        elemente[i] = elemente[i + 1];
+        elemente[i + 1] = null;
       }
     }
   }
-  
+
   public void entferneElementAnIndex(int index) {
-    elemente[index]=null;
+    elemente[index] = null;
   }
-  
+
   public int getAnzahlElemente() {
     return anzahlElemente;
   }
-  
+
   public Object[] getListe() {
     return elemente;
   }
-  
+
   public String toString() {
-    String result="";
-    for(int i=0;i<elemente.length;i++) {
-      result+="("+elemente[i].toString()+"),";
+    String result = "";
+    for (int i = 0; i < elemente.length; i++) {
+      result += "(" + elemente[i].toString() + "),";
     }
     return result;
   }
-  
+
+  /**
+   * 
+   * @return
+   */
   public T getKleinstesElement() {
     T result = null;
-    if(AnwendungGenerics.istErsteElementZahl(this)) {
-      for(int i=0;i<elemente.length;i++) {
-        result=(T)elemente[i];
-        if(elemente[i]!=null) {
-          if(((Number)elemente[i]).doubleValue()<((Number)result).doubleValue()) {
-            result=(T)elemente[i];
+    if (AnwendungGenerics.istErsteElementZahl(this)) {
+      result = (T) elemente[0];
+
+      for (int i = 0; i < elemente.length; i++) {
+        if (elemente[i] != null) {
+          if (((Number) elemente[i]).doubleValue() < ((Number) result)
+              .doubleValue()) {
+            result = (T) elemente[i];
           }
         }
       }
     }
     return result;
-    }
-    
-  
-  
+  }
+
 }
