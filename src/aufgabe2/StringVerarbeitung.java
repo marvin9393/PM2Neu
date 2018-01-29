@@ -5,10 +5,13 @@
 */
 package aufgabe2;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
@@ -106,9 +109,10 @@ public class StringVerarbeitung {
     Function<String, String> umlauteEntfernen=wort->{
      return wort.replace("Ä", "AE");
     };
-    
     Stream<String> stringVerarbeitung = Arrays.stream(woerter);
-    stringVerarbeitung.filter(nichtNull).map(String::trim).map(String::toUpperCase).map(umlauteEntfernen).map(achtStellen).forEach(System.out::println);
+    List<String> woerterListe =stringVerarbeitung.filter(nichtNull).map(String::trim).map(String::toUpperCase).
+    map(umlauteEntfernen).map(achtStellen).collect(Collectors.toCollection(ArrayList::new));
+    System.out.println(woerterListe.toString());
   }
 
 }
